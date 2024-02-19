@@ -1,0 +1,9 @@
+npm i vuex@4
+npm i axios
+npm i mitt@2
+npm i vue-i18n@9.2.0-beta.22
+npm i vue-i18n-extract@1.2.3
+npm i @capacitor/preferences
+npm i @capacitor/device
+npm i @capacitor/push-notifications
+npm i axios-auth-refresh
