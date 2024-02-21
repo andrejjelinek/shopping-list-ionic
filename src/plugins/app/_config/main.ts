@@ -20,18 +20,25 @@ import '@/plugins/app/_themes/index.sass'
 
 import store from './store'
 import w from '@/plugins/w/w'
+import wToast from '@/plugins/w/toast'
+import { VueQueryPlugin } from '@tanstack/vue-query'
 
 const app = createApp(App)
-	.use(IonicVue)
-	.use(router)
-	.use(store)
-	.use(w, {
-		i18n: {
-			defaultLanguage: 'sk',
-			languages: [{title: "Slovenský", flag: "sk", value: "sk"}]
-		}
-	})
+  .use(IonicVue)
+  .use(VueQueryPlugin)
+  .use(router)
+  .use(store)
+  .use(w, {
+    i18n: {
+      defaultLanguage: 'en',
+      languages: [
+        { title: 'Slovenský', flag: 'sk', value: 'sk' },
+        { title: 'English', flag: 'en', value: 'en' },
+      ],
+    },
+  })
+  .use(wToast)
 
 router.isReady().then(() => {
-	app.mount('#app')
+  app.mount('#app')
 })
