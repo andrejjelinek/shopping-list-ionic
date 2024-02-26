@@ -3,7 +3,7 @@
     <ion-grid class="ion-no-margin">
       <ion-row>
         <ion-col size="12">
-          <ion-progress-bar type="indeterminate"></ion-progress-bar>
+          <ion-progress-bar type="indeterminate" />
         </ion-col>
       </ion-row>
       <ion-row>

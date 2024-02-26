@@ -1,15 +1,23 @@
 <template>
   <ion-item>
-    <ion-checkbox v-model="item.is_checked" @ionChange="handleCheckItem(item)" label-placement="end">{{ item.name }}</ion-checkbox>
+    <ion-grid>
+      <ion-row class="ion-justify-content-between">
+        <ion-col size="auto">
+          <ion-checkbox v-model="item.is_checked" @ionChange="handleCheckItem(item)" label-placement="end">{{ item.name }}</ion-checkbox>
+        </ion-col>
 
-    <ion-button @click="handleDeleteItem(item)" color="danger" fill="outline">
-      <ion-icon :icon="trashOutline" slot="icon-only"></ion-icon>
-    </ion-button>
+        <ion-col size="auto">
+          <ion-button @click="handleDeleteItem(item)" color="danger" fill="clear">
+            <ion-icon :icon="trashOutline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-item>
 </template>
 
 <script setup lang="ts">
-import { CheckedItem, ShoppingListItem } from '../../../app/models/shopping-list-models'
+import { CheckedItem, ShoppingListItem } from '../../../app/_models/shopping-list-models'
 import { trashOutline } from 'ionicons/icons'
 
 const emit = defineEmits<{

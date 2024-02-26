@@ -2,13 +2,10 @@
   <ion-card color="light">
     <ion-card-header>
       <ion-card-title>
-        <ion-button
-          fill="clear"
-          @click="openShoppingListDetail(shoppingList)"
-          :router-link="`/shopping-lists/${shoppingList.id}`"
-          router-direction="back"
-          ><ion-icon :icon="informationCircleOutline" size="large"></ion-icon>{{ shoppingList.title }}</ion-button
-        >
+        <ion-button fill="clear" @click="openShoppingListDetail(shoppingList)" :router-link="`/shopping-lists/${shoppingList.id}`" router-direction="back">
+          <ion-icon :icon="basketOutline" size="large"></ion-icon>
+          {{ shoppingList.title }}
+        </ion-button>
       </ion-card-title>
     </ion-card-header>
 
@@ -16,15 +13,18 @@
       <ion-list>
         <ion-grid>
           <ion-item v-for="item in shoppingList.items.slice(0, 3)" :key="item.id">
-            <ion-row class="ion-justify-content-between">
-              <ion-col size="auto">
+            <ion-row class="ion-justify-content-between ion-align-items-center">
+              <ion-col size="auto" :class="item.is_checked ? 'checked' : ''">
                 {{ item.name }}
               </ion-col>
 
               <ion-col size="auto">
-                <ion-badge>
-                  <ion-text>{{ item.value }} {{ item.unit }}</ion-text>
-                </ion-badge>
+                <ion-row class="ion-align-items-center">
+                  <ion-badge>
+                    <ion-text>{{ item.value }} {{ item.unit }}</ion-text>
+                  </ion-badge>
+                  <AShoppingItemUnits />
+                </ion-row>
               </ion-col>
             </ion-row>
           </ion-item>
@@ -38,9 +38,10 @@
 </template>
 
 <script setup lang="ts">
-import { ShoppingList } from '../../../app/models/shopping-list-models'
+import { ShoppingList } from '../../../app/_models/shopping-list-models'
+import AShoppingItemUnits from './a-edit-shopping-item-units.vue'
 import { useRouter } from 'vue-router'
-import { informationCircleOutline } from 'ionicons/icons'
+import { basketOutline } from 'ionicons/icons'
 
 const { shoppingList } = defineProps({
   shoppingList: {
@@ -67,5 +68,13 @@ ion-card ion-row {
 
 ion-card {
   cursor: pointer;
+}
+
+ion-card-title ion-icon {
+  margin-right: 0.5rem;
+}
+
+.checked {
+  text-decoration: line-through;
 }
 </style>
