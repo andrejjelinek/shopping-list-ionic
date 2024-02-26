@@ -20,8 +20,10 @@ import '@/plugins/app/_themes/index.sass'
 
 import store from './store'
 import w from '@/plugins/w/w'
-import wToast from '@/plugins/w/toast'
+// import wToast from '@/plugins/w/toast'
 import { VueQueryPlugin } from '@tanstack/vue-query'
+import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 
 const app = createApp(App)
   .use(IonicVue)
@@ -37,7 +39,13 @@ const app = createApp(App)
       ],
     },
   })
-  .use(wToast)
+  .use(Vue3Toastify, {
+    theme: 'colored',
+    type: 'success',
+    position: 'bottom-center',
+    autoClose: 2000,
+  } as ToastContainerOptions)
+// .use(wToast)
 
 router.isReady().then(() => {
   app.mount('#app')
