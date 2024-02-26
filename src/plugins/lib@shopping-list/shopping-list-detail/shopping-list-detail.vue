@@ -1,21 +1,35 @@
 <template>
   <ion-page>
     <template v-if="shoppingListById === null">
-      <v-progress-linear indeterminate color="success" />
+      <v-progress-linear indeterminate />
     </template>
 
     <template v-else>
       <ion-card>
         <ion-card-header>
-          <ion-card-title>{{ shoppingListById?.title }}</ion-card-title>
+          <ion-card-title>
+            <ion-grid>
+              <ion-row>
+                <ion-button @click="handleNavigateBack" fill="clear">
+                  <ion-icon :icon="arrowBackOutline" slot="icon-only"></ion-icon>
+                </ion-button>
+                <p class="ion-text-center">{{ shoppingListById?.title }}</p>
+              </ion-row>
+            </ion-grid>
+          </ion-card-title>
         </ion-card-header>
 
         <!-- <button @click="handleDeleteShoppingList()" class="hover:bg-rose-50 rounded-lg p-1 ease-in duration-200 active">
             <img src="../../app/_assets/deleteIcon.svg" alt="Delete icon" />
           </button> -->
         <ion-list lines="full">
-          <AShoppingListDetailItem v-for="item in shoppingListById?.items" :item="item" :key="item.id" />
-          <!-- <A-shopping-list-detail-item v-for="item in shoppingListById?.items" @deleteItem="handleDeleteItem" @checkItem="handleCheckItem" :item="item" :key="item.id" /> -->
+          <AShoppingListDetailItem
+            v-for="item in shoppingListById?.items"
+            @check-item="checkItemMutation"
+            @delete-item="deleteItemMutation"
+            :item="item"
+            :key="item.id"
+          />
         </ion-list>
 
         <!-- <div class="w-3/4 m-auto">
@@ -32,26 +46,74 @@
 </template>
 
 <script setup lang="ts">
+import { CheckedItem } from '@/plugins/app/models/shopping-list-models'
+import axios from '@/plugins/w/axios/models/axios'
+import { useMutation, useQuery } from '@tanstack/vue-query'
+import { useRoute, useRouter } from 'vue-router'
+import { toast } from 'vue3-toastify'
 import AShoppingListDetailItem from './_components/a-shopping-list-detail-item.vue'
-import { ShoppingList } from '@/plugins/app/models/shopping-list-models'
-import { useQuery } from '@tanstack/vue-query'
-import { useRoute } from 'vue-router'
+import { ShoppingListService } from '../shopping-lists/_services/shopping-list-service'
+import { arrowBackOutline } from 'ionicons/icons'
 
 const route = useRoute()
 const { id } = route.params
+const router = useRouter()
 
 /**
- * Use query for loading cached shopping lists from previous page
+ * Mutation for check/uncheck shopping list item
  */
-const { data: shoppingLists } = useQuery({
+const { mutate: checkItemMutation } = useMutation({
+  mutationFn: (checkedItem: CheckedItem) => handleCheckItem(checkedItem),
+})
+
+/**
+ * Mutation for deleting shopping list item
+ */
+const { mutate: deleteItemMutation } = useMutation({
+  mutationFn: (itemId: number) => handleDeleteItem(itemId),
+})
+
+/**
+ * Use query for loading shopping lists, if data are loaded from shopping-lists.vue, request is not sended data are from cache
+ */
+const { data: shoppingLists, refetch } = useQuery({
   queryKey: ['shopping-lists'],
-  queryFn: () => {
-    return [] as ShoppingList[]
-  },
+  queryFn: () => ShoppingListService.loadData(),
 })
 
 /**
  * Property for finding shopping list by ID from ULR params
  */
-const shoppingListById = shoppingLists?.value.find((item) => item.id == +id) ?? null
+const shoppingListById = shoppingLists?.value?.find((item) => item.id == +id) ?? null
+
+/**
+ * Send PUT request for updating is_checked property
+ */
+const handleCheckItem = async (item: CheckedItem) => {
+  try {
+    await axios.put(`api/v1/shopping-lists/${id}/items/${item.id}`, item)
+    toast.success(`OK - item was ${item.is_checked ? 'checked' : 'unchecked'}`)
+    refetch()
+  } catch (error) {
+    console.error('Error:', error.message)
+    toast.error(error.message)
+  }
+}
+
+/**
+ * Send DELETE request for dele
+ */
+const handleDeleteItem = async (itemId) => {
+  try {
+    await axios.delete(`api/v1/shopping-lists/${id}/items/${itemId}`)
+    refetch()
+  } catch (error) {
+    console.error('Error:', error)
+    toast.error(error.message)
+  }
+}
+
+const handleNavigateBack = () => {
+  router.go(-1)
+}
 </script>

@@ -1,17 +1,21 @@
 <template>
   <ion-item>
-    <div class="flex justify-between ps-3 w-full">
-      <ion-checkbox v-model="item.is_checked" @change="handleCheckItem(item)" label-placement="end">{{ item.name }}</ion-checkbox>
+    <ion-checkbox v-model="item.is_checked" @ionChange="handleCheckItem(item)" label-placement="end">{{ item.name }}</ion-checkbox>
 
-      <!-- <button @click="handleDeleteItem(item)" class="hover:bg-rose-50 rounded-lg p-1 ease-in duration-200 active">
-              <img src="../../../app/_assets/deleteIcon.svg" alt="Delete icon" />
-            </button> -->
-    </div>
+    <ion-button @click="handleDeleteItem(item)" color="danger" fill="outline">
+      <ion-icon :icon="trashOutline" slot="icon-only"></ion-icon>
+    </ion-button>
   </ion-item>
 </template>
 
 <script setup lang="ts">
-import { ShoppingListItem } from '../../../app/models/shopping-list-models'
+import { CheckedItem, ShoppingListItem } from '../../../app/models/shopping-list-models'
+import { trashOutline } from 'ionicons/icons'
+
+const emit = defineEmits<{
+  checkItem: [checkedItem: CheckedItem]
+  deleteItem: [itemId: number]
+}>()
 
 const { item } = defineProps({
   item: {
@@ -26,8 +30,7 @@ const { item } = defineProps({
  * @param {*} param0
  */
 const handleDeleteItem = ({ id: itemId }) => {
-  // if (itemId)
-  // this.$emit('deleteItem', itemId)
+  emit('deleteItem', itemId)
 }
 
 /**
@@ -35,6 +38,7 @@ const handleDeleteItem = ({ id: itemId }) => {
  * @param {*} param0
  */
 const handleCheckItem = ({ id: itemId, is_checked: isChecked }) => {
-  // this.$emit('checkItem', { id: itemId, is_checked: isChecked })
+  const checkedItem: CheckedItem = { id: itemId, is_checked: !isChecked }
+  emit('checkItem', checkedItem)
 }
 </script>

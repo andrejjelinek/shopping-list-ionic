@@ -3,7 +3,7 @@
     <ion-grid class="ion-no-margin">
       <ion-row>
         <ion-col size="12">
-          <ion-progress-bar type="indeterminate" color="success"></ion-progress-bar>
+          <ion-progress-bar type="indeterminate"></ion-progress-bar>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -37,7 +37,6 @@
   <template v-else>
     <ion-page>
       <ion-content>
-        <p>work</p>
         <AShoppingListCard v-for="item in shoppingLists" :shoppingList="item" :key="item.id" />
       </ion-content>
       <!-- <A-shopping-lists-menu @createNewList="handleCreateShoppingList" @deleteList="handleDeleteShoppingList" :shoppingLists="shoppingLists" /> -->
@@ -46,32 +45,15 @@
 </template>
 
 <script setup lang="ts">
-import axios from '@/plugins/w/axios/models/axios'
 import { useQuery } from '@tanstack/vue-query'
-import { toast } from 'vue3-toastify'
-import { ShoppingList } from '../../app/models/shopping-list-models'
 import AShoppingListCard from './_components/a-shopping-list-card.vue'
+import { ShoppingListService } from './_services/shopping-list-service'
 
 /**
  * Query for shopping lists
  */
 const { data: shoppingLists, isLoading } = useQuery({
   queryKey: ['shopping-lists'],
-  queryFn: () => loadData(),
+  queryFn: () => ShoppingListService.loadData(),
 })
-
-/**
- * Send request for loading shopping lists
- */
-const loadData = async () => {
-  try {
-    const { data } = await axios.get(`api/v1/shopping-lists`)
-    toast.success('Successfully loaded data')
-    return data as ShoppingList[]
-  } catch (error) {
-    toast.error(error.message)
-    console.error('Error:', error)
-    return [] as ShoppingList[]
-  }
-}
 </script>

@@ -2,12 +2,13 @@
   <ion-card color="light">
     <ion-card-header>
       <ion-card-title>
-        <a @click.prevent="openShoppingListDetail(shoppingList)" :href="`/shopping-lists/${shoppingList.id}`">
-          <img src="../_assets/infoIcon.svg" alt="Info icon" />
-          <span>{{ shoppingList.title }}</span>
-        </a>
-        <!-- <ion-button @click="openShoppingListDetail(shoppingList)" :router-link="`/shopping-lists/${shoppingList.id}`" router-direction="back">{{ shoppingList.title }}</ion-button> -->
-        <router-link :to="`/shopping-lists/${shoppingList.id}`">Click here to navigate</router-link>
+        <ion-button
+          fill="clear"
+          @click="openShoppingListDetail(shoppingList)"
+          :router-link="`/shopping-lists/${shoppingList.id}`"
+          router-direction="back"
+          ><ion-icon :icon="informationCircleOutline" size="large"></ion-icon>{{ shoppingList.title }}</ion-button
+        >
       </ion-card-title>
     </ion-card-header>
 
@@ -21,8 +22,8 @@
               </ion-col>
 
               <ion-col size="auto">
-                <ion-badge color="success">
-                  <ion-text class="ion-color-primary-contrast">{{ item.value }}{{ item.unit }}</ion-text>
+                <ion-badge>
+                  <ion-text>{{ item.value }} {{ item.unit }}</ion-text>
                 </ion-badge>
               </ion-col>
             </ion-row>
@@ -39,6 +40,7 @@
 <script setup lang="ts">
 import { ShoppingList } from '../../../app/models/shopping-list-models'
 import { useRouter } from 'vue-router'
+import { informationCircleOutline } from 'ionicons/icons'
 
 const { shoppingList } = defineProps({
   shoppingList: {

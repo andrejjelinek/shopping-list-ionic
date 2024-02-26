@@ -21,9 +21,11 @@ import '@/plugins/app/_themes/index.sass'
 import store from './store'
 import w from '@/plugins/w/w'
 // import wToast from '@/plugins/w/toast'
-import { VueQueryPlugin } from '@tanstack/vue-query'
+import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
+
+export const queryClient = new QueryClient()
 
 const app = createApp(App)
   .use(IonicVue)
