@@ -2,7 +2,12 @@
   <ion-card color="light">
     <ion-card-header>
       <ion-card-title>
-        <ion-button fill="clear" @click="openShoppingListDetail(shoppingList)" :router-link="`/shopping-lists/${shoppingList.id}`" router-direction="back">
+        <ion-button
+          fill="clear"
+          @click="openShoppingListDetail(shoppingList)"
+          :router-link="`/shopping-lists/${shoppingList.id}`"
+          router-direction="back"
+        >
           <ion-icon :icon="basketOutline" size="large"></ion-icon>
           {{ shoppingList.title }}
         </ion-button>
@@ -17,7 +22,6 @@
               <ion-col size="auto" :class="item.is_checked ? 'checked' : ''">
                 {{ item.name }}
               </ion-col>
-
               <ion-col size="auto">
                 <ion-row class="ion-align-items-center">
                   <ion-badge>

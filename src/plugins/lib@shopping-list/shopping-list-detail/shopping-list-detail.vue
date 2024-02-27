@@ -5,50 +5,68 @@
     </template>
 
     <template v-else>
-      <ion-card color="light">
-        <ion-card-header>
-          <ion-card-title>
-            <ion-grid>
-              <ion-row class="ion-align-items-center">
-                <ion-col size="auto">
-                  <ion-button @click="handleNavigateBack" fill="clear">
-                    <ion-icon :icon="arrowBackOutline" slot="icon-only"></ion-icon>
-                  </ion-button>
-                </ion-col>
+      <ion-page>
+        <ion-content>
+          <ion-card color="light">
+            <ion-card-header>
+              <ion-card-title>
+                <ion-grid>
+                  <ion-row class="ion-align-items-center">
+                    <ion-col size="auto">
+                      <ion-button @click="handleNavigateBack" fill="clear">
+                        <ion-icon :icon="arrowBackOutline" slot="icon-only"></ion-icon>
+                      </ion-button>
+                    </ion-col>
 
-                <ion-col size="auto">
-                  <p class="ion-text-center">{{ shoppingListById?.title }}</p>
-                </ion-col>
+                    <ion-col size="auto">
+                      <p class="ion-text-center">{{ shoppingListById?.title }}</p>
+                    </ion-col>
 
-                <ion-col size="auto">
-                  <ion-button color="danger" fill="clear">
-                    <ion-icon :icon="trashOutline" slot="icon-only"></ion-icon>
-                  </ion-button>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-card-title>
-        </ion-card-header>
+                    <ion-col size="auto">
+                      <ion-button color="danger" fill="clear">
+                        <ion-icon :icon="trashOutline" slot="icon-only"></ion-icon>
+                      </ion-button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card-title>
+            </ion-card-header>
 
-        <ion-card-content>
-          <!-- <button @click="handleDeleteShoppingList()" class="hover:bg-rose-50 rounded-lg p-1 ease-in duration-200 active">
+            <ion-card-content>
+              <!-- <button @click="handleDeleteShoppingList()" class="hover:bg-rose-50 rounded-lg p-1 ease-in duration-200 active">
             <img src="../../app/_assets/deleteIcon.svg" alt="Delete icon" />
           </button> -->
-          <ion-progress-bar type="indeterminate" v-if="pendingCheck || pendingDelete || pendingCreateItem" />
-          <ion-list lines="full">
-            <AShoppingListDetailItem v-for="item in shoppingListById?.items" @check-item="checkItemMutation" @delete-item="deleteItemMutation" :item="item" :key="item.id" />
-          </ion-list>
-          <ion-input v-model="newItemName" @keyup.enter="createItemMutation" :disabled="pendingCreateItem" label="New item name" label-placement="floating" fill="solid" placeholder="Enter name"></ion-input>
-          <!-- <div class="w-3/4 m-auto">
+              <ion-progress-bar type="indeterminate" v-if="pendingCheck || pendingDelete || pendingCreateItem" />
+              <ion-list lines="full">
+                <AShoppingListDetailItem
+                  v-for="item in shoppingListById?.items"
+                  @check-item="checkItemMutation"
+                  @delete-item="deleteItemMutation"
+                  :item="item"
+                  :key="item.id"
+                />
+              </ion-list>
+              <ion-input
+                v-model="newItemName"
+                @keyup.enter="createItemMutation"
+                :disabled="pendingCreateItem"
+                :label="$t('newItemName')"
+                label-placement="floating"
+                fill="solid"
+                placeholder="Enter name"
+              ></ion-input>
+              <!-- <div class="w-3/4 m-auto">
           <v-text-field v-model="newItemName" @keyup.enter="handleCreateItem" label="New item" hide-details="auto" color="primary"></v-text-field>
         </div> -->
 
-          <!-- <v-btn @click="handleNavigateBack" variant="outlined" color="primary" class="w-1/6 mx-auto mt-10">
+              <!-- <v-btn @click="handleNavigateBack" variant="outlined" color="primary" class="w-1/6 mx-auto mt-10">
           <img src="./_assets/backIcon.svg" alt="Back icon" />
           Back
         </v-btn> -->
-        </ion-card-content>
-      </ion-card>
+            </ion-card-content>
+          </ion-card>
+        </ion-content>
+      </ion-page>
     </template>
   </ion-page>
 </template>
@@ -61,10 +79,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
 import AShoppingListDetailItem from './_components/a-shopping-list-detail-item.vue'
 import { ShoppingListService } from '../shopping-lists/_services/shopping-list-service'
-import { arrowBackOutline } from 'ionicons/icons'
+import { arrowBackOutline, trashOutline } from 'ionicons/icons'
 import { queryClient } from '@/plugins/app/_config/main'
 import { computed, ref } from 'vue'
-import { trashOutline } from 'ionicons/icons'
 
 const route = useRoute()
 const { id } = route.params

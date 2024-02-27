@@ -24,14 +24,17 @@ import w from '@/plugins/w/w'
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
+import { createPinia } from 'pinia'
 
 export const queryClient = new QueryClient()
+const pinia = createPinia()
 
 const app = createApp(App)
   .use(IonicVue)
   .use(VueQueryPlugin)
   .use(router)
   .use(store)
+  .use(pinia)
   .use(w, {
     i18n: {
       defaultLanguage: 'en',
