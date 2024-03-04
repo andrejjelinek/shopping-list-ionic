@@ -49,18 +49,20 @@ import { basketOutline } from 'ionicons/icons'
 <style>
 ion-grid {
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .content {
-  height: 90vh;
+  flex-grow: 4;
 }
 
 ion-header {
-  height: 6vh;
+  flex-grow: 1;
 }
 
 ion-footer {
-  height: 4vh;
+  flex-grow: 1;
   background-color: var(--ion-color-light);
   color: var(--ion-color-primary);
 }
