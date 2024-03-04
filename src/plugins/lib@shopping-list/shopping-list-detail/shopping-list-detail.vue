@@ -14,7 +14,7 @@
                   <ion-row class="ion-align-items-center">
                     <ion-col size="auto">
                       <ion-button @click="handleNavigateBack" fill="clear">
-                        <ion-icon :icon="arrowBackOutline" slot="icon-only"></ion-icon>
+                        <ion-icon :icon="arrowBackOutline" slot="icon-only" />
                       </ion-button>
                     </ion-col>
 
@@ -23,8 +23,8 @@
                     </ion-col>
 
                     <ion-col size="auto">
-                      <ion-button color="danger" fill="clear">
-                        <ion-icon :icon="trashOutline" slot="icon-only"></ion-icon>
+                      <ion-button @click="deleteShoppingListMutation" :disabled="pendingDeleteShoppingList" color="danger" fill="clear">
+                        <ion-icon :icon="trashOutline" slot="icon-only" />
                       </ion-button>
                     </ion-col>
                   </ion-row>
@@ -33,36 +33,11 @@
             </ion-card-header>
 
             <ion-card-content>
-              <!-- <button @click="handleDeleteShoppingList()" class="hover:bg-rose-50 rounded-lg p-1 ease-in duration-200 active">
-            <img src="../../app/_assets/deleteIcon.svg" alt="Delete icon" />
-          </button> -->
               <ion-progress-bar type="indeterminate" v-if="pendingCheck || pendingDelete || pendingCreateItem" />
               <ion-list lines="full">
-                <AShoppingListDetailItem
-                  v-for="item in shoppingListById?.items"
-                  @check-item="checkItemMutation"
-                  @delete-item="deleteItemMutation"
-                  :item="item"
-                  :key="item.id"
-                />
+                <AShoppingListDetailItem v-for="item in shoppingListById?.items" @check-item="checkItemMutation" @delete-item="deleteItemMutation" :item="item" :key="item.id" />
               </ion-list>
-              <ion-input
-                v-model="newItemName"
-                @keyup.enter="createItemMutation"
-                :disabled="pendingCreateItem"
-                :label="$t('newItemName')"
-                label-placement="floating"
-                fill="solid"
-                placeholder="Enter name"
-              ></ion-input>
-              <!-- <div class="w-3/4 m-auto">
-          <v-text-field v-model="newItemName" @keyup.enter="handleCreateItem" label="New item" hide-details="auto" color="primary"></v-text-field>
-        </div> -->
-
-              <!-- <v-btn @click="handleNavigateBack" variant="outlined" color="primary" class="w-1/6 mx-auto mt-10">
-          <img src="./_assets/backIcon.svg" alt="Back icon" />
-          Back
-        </v-btn> -->
+              <ion-input v-model="newItemName" @keyup.enter="createItemMutation" :disabled="pendingCreateItem" :label="$t('newItemName')" label-placement="floating" fill="solid" :placeholder="$t('newItemNamePlaceholder')"></ion-input>
             </ion-card-content>
           </ion-card>
         </ion-content>
@@ -74,19 +49,28 @@
 <script setup lang="ts">
 import { CheckedItem } from '@/plugins/app/_models/shopping-list-models'
 import axios from '@/plugins/w/axios/models/axios'
-import { useMutation, useQuery } from '@tanstack/vue-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue3-toastify'
 import AShoppingListDetailItem from './_components/a-shopping-list-detail-item.vue'
 import { ShoppingListService } from '../shopping-lists/_services/shopping-list-service'
 import { arrowBackOutline, trashOutline } from 'ionicons/icons'
-import { queryClient } from '@/plugins/app/_config/main'
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const route = useRoute()
 const { id } = route.params
 const router = useRouter()
 const newItemName = ref('')
+const { t } = useI18n()
+const queryClient = useQueryClient()
+
+/**
+ * Mutation for check/uncheck shopping list item
+ */
+const { mutate: deleteShoppingListMutation, isPending: pendingDeleteShoppingList } = useMutation({
+  mutationFn: () => handleDeleteShoppingList(),
+})
 
 /**
  * Mutation for check/uncheck shopping list item
@@ -145,7 +129,7 @@ const handleDeleteItem = async (itemId) => {
   try {
     await axios.delete(`api/v1/shopping-lists/${id}/items/${itemId}`)
     refetch()
-    toast.success(`OK - item was deleted`)
+    toast.success(t(`deleteItemInfo`))
   } catch (error) {
     console.error('Error:', error)
     toast.error(error.message)
@@ -157,7 +141,7 @@ const handleDeleteItem = async (itemId) => {
  */
 const handleCreateItem = async () => {
   try {
-    if (newItemName.value.trim() == '') return toast.warning('Item name cannot be empty')
+    if (newItemName.value.trim() == '') return toast.warning(t('itemNameEmpty'))
 
     await axios.post(`api/v1/shopping-lists/${id}/items`, {
       is_checked: false,
@@ -168,7 +152,20 @@ const handleCreateItem = async () => {
 
     refetch()
     newItemName.value = ''
-    toast.success('Item created successfully')
+    toast.success(t('createdItemInfo'))
+  } catch (error) {
+    console.error('Error:', error.message)
+    toast.error(error.message)
+  }
+}
+
+/**
+ * Send DELETE request for deleting shopping list
+ */
+const handleDeleteShoppingList = async () => {
+  try {
+    await axios.delete(`api/v1/shopping-lists/${id}`)
+    router.push('/')
   } catch (error) {
     console.error('Error:', error.message)
     toast.error(error.message)
@@ -177,6 +174,6 @@ const handleCreateItem = async () => {
 
 const handleNavigateBack = () => {
   queryClient.invalidateQueries({ queryKey: ['shopping-lists'] })
-  router.go(-1)
+  router.push('/')
 }
 </script>

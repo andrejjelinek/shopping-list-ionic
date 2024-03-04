@@ -39,7 +39,6 @@
       <ion-content>
         <AShoppingListCard v-for="item in shoppingLists" :shoppingList="item" :key="item.id" />
       </ion-content>
-      <!-- <A-shopping-lists-menu @createNewList="handleCreateShoppingList" @deleteList="handleDeleteShoppingList" :shoppingLists="shoppingLists" /> -->
     </ion-page>
   </template>
 </template>

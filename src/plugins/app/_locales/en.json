@@ -1,5 +1,20 @@
 {
   "homeBtn": "Home",
   "selectedLanguage": "Selected language:",
-  "newItemName": "New item name"
+  "newItemName": "New item name",
+  "newItemNamePlaceholder": "Enter name",
+  "newShoppingListName": "New shopping list",
+  "newShoppingListInfo": "OK - new shopping list was created",
+  "newShoppingListError": "List name cannot be empty",
+  "createdItemInfo": "Item was created successfully",
+  "itemNameEmpty": "Item name cannot be empty",
+  "deleteItemInfo": "OK - item was deleted",
+  "shoppingList": "Shopping list",
+  "updateUnitTitle": "Update unit",
+  "package": "Package",
+  "piece": "Piece",
+  "grams": "Grams",
+  "kilograms": "Kilograms",
+  "editBtn": "Edit",
+  "updateUnitInfo": "Unit was updated"
 }

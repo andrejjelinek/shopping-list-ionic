@@ -7,9 +7,14 @@
         </ion-col>
 
         <ion-col size="auto">
-          <ion-button @click="handleDeleteItem(item)" color="danger" fill="clear">
-            <ion-icon :icon="trashOutline" slot="icon-only"></ion-icon>
-          </ion-button>
+          <ion-row class="ion-align-items-center">
+            <ion-badge>
+              <ion-text>{{ item.value }} {{ $t(item.unit) }}</ion-text>
+            </ion-badge>
+            <ion-button @click="handleDeleteItem(item)" color="danger" fill="clear">
+              <ion-icon :icon="trashOutline" slot="icon-only" />
+            </ion-button>
+          </ion-row>
         </ion-col>
       </ion-row>
     </ion-grid>

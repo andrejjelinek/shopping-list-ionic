@@ -1,5 +1,20 @@
 {
   "homeBtn": "Domov",
   "selectedLanguage": "Zvolený jazyk:",
-  "newItemName": "Názov novej položky"
+  "newItemName": "Názov novej položky",
+  "newItemNamePlaceholder": "Zadajte názov",
+  "newShoppingListName": "Názov nového nákupného zoznamu",
+  "newShoppingListInfo": "OK - nový nákupný zoznam bol vytvorený",
+  "newShoppingListError": "Názov nákupného zoznamu nemôže byť prázdny",
+  "createdItemInfo": "Položka bola úspešne vytvorená",
+  "itemNameEmpty": "Názov položky nemôže byť prázdny",
+  "deleteItemInfo": "OK - položka bola zmazaná",
+  "shoppingList": "Nákupný zoznam",
+  "updateUnitTitle": "Úprava jednotiek",
+  "package": "Balenie",
+  "piece": "Kusy",
+  "grams": "Gramy",
+  "kilograms": "Kilogramy",
+  "editBtn": "Upraviť",
+  "updateUnitInfo": "Jednotky boli aktualizované"
 }

@@ -1,5 +1,5 @@
 <template>
-  <ion-card class="ion-no-margin language-card">
+  <ion-card class="language-card">
     <ion-card-header>
       <ion-card-title>
         <ion-grid>
@@ -25,40 +25,72 @@
     </ion-item>
     <ion-item v-for="item in shoppingLists" :key="item.id" class="menu-item">
       <router-link :to="`/shopping-lists/${item.id}`" active-class="active-link">
+        <ion-icon :icon="bagOutline" />
         {{ item.title }}
       </router-link>
+    </ion-item>
+    <ion-item class="ion-margin-top">
+      <ion-input v-model="newListName" @keyup.enter="createShoppingListMutation" :disabled="pendingCreateShoppingList" :label="$t('newShoppingListName')" label-placement="stacked" fill="solid" :placeholder="$t('newItemNamePlaceholder')" />
     </ion-item>
   </ion-list>
 </template>
 
 <script setup lang="ts">
-import { LanguageType, useLanguageStore } from '@/plugins/app/_config/piniaStore'
-import { useQuery } from '@tanstack/vue-query'
+import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useI18n } from 'vue-i18n'
 import { ShoppingListService } from '../shopping-lists/_services/shopping-list-service'
-import { homeOutline } from 'ionicons/icons'
+import { homeOutline, bagOutline } from 'ionicons/icons'
+import { ref } from 'vue'
+import axios from '@/plugins/w/axios/models/axios'
+import { toast } from 'vue3-toastify'
 
-const languageStore = useLanguageStore()
-const { locale } = useI18n()
+// const languageStore = useLanguageStore()
+const { locale, t } = useI18n()
+const newListName = ref<string>('')
+
+/**
+ * Mutation for check/uncheck shopping list item
+ */
+const { mutate: createShoppingListMutation, isPending: pendingCreateShoppingList } = useMutation({
+  mutationFn: () => handleCreateShoppingList(),
+})
 
 /**
  * Query for shopping lists
  */
-const { data: shoppingLists } = useQuery({
+const { data: shoppingLists, refetch } = useQuery({
   queryKey: ['shopping-lists'],
   queryFn: () => ShoppingListService.loadData(),
 })
 
-const changeLanguage = (lang: LanguageType) => {
-  //   languageStore.langType = lang
-  locale.value = lang
+/**
+ * Send POST request for creating a new shopping list
+ */
+const handleCreateShoppingList = async () => {
+  try {
+    if (newListName.value.trim() == '') return toast.warning(t('newShoppingListError'))
+
+    await axios.post(`api/v1/shopping-lists`, {
+      items: [],
+      title: newListName.value,
+    })
+    refetch()
+    newListName.value = ''
+    toast.success(t('newShoppingListInfo'))
+  } catch (error) {
+    console.error('Error:', error.message)
+    toast.error(error.message)
+  }
 }
 </script>
 
 <style>
-.menu-list,
-.language-card {
+.menu-list {
   margin-top: 10px;
+}
+
+.language-card {
+  margin: 10px 0;
 }
 
 .active-link {

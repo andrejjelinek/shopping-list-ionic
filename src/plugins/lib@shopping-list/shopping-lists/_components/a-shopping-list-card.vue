@@ -2,13 +2,8 @@
   <ion-card color="light">
     <ion-card-header>
       <ion-card-title>
-        <ion-button
-          fill="clear"
-          @click="openShoppingListDetail(shoppingList)"
-          :router-link="`/shopping-lists/${shoppingList.id}`"
-          router-direction="back"
-        >
-          <ion-icon :icon="basketOutline" size="large"></ion-icon>
+        <ion-button fill="clear" @click="openShoppingListDetail(shoppingList)" :router-link="`/shopping-lists/${shoppingList.id}`" router-direction="back">
+          <ion-icon :icon="basketOutline" size="large" />
           {{ shoppingList.title }}
         </ion-button>
       </ion-card-title>
@@ -25,9 +20,9 @@
               <ion-col size="auto">
                 <ion-row class="ion-align-items-center">
                   <ion-badge>
-                    <ion-text>{{ item.value }} {{ item.unit }}</ion-text>
+                    <ion-text>{{ item.value }} {{ $t(item.unit) }}</ion-text>
                   </ion-badge>
-                  <AShoppingItemUnits />
+                  <AShoppingItemUnits :item="item" :list-id="shoppingList.id" />
                 </ion-row>
               </ion-col>
             </ion-row>
